@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: django
+  namespace: my-django-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: django
+  template:
+    metadata:
+      labels:
+        app: django
+    spec:
+      containers:
+      - name: django
+        image: surya9909/my-django-app:latest
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8000
+        envFrom:
+          - secretRef:
+              name: django-secret
+        command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
